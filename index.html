@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodPoint</title>
+    <title>Food Reciepe Finder</title>
 
     <!-- FONT -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -18,7 +18,7 @@
     <!-- HEADER -->
     <header>
         <div class="container header-container">
-            <div class="logo">FoodPoint</div>
+            <div class="logo">Food Reciepe Finder</div>
 
             <nav>
                 <ul>
@@ -37,7 +37,7 @@
 
         <div class="container hero-content">
             <div class="hero-text">
-                <h1>We Serve Delicious <span>Food</span></h1>
+                <h1>We Serve Delicious <span>Food Recipes </span></h1>
                 <p>Keep it simple with easy-to-use, delicious recipes that make your food moments fun and memorable.</p>
             </div>
 
@@ -56,7 +56,8 @@
 
             <div class="about-text">
                 <h2>About <span>Us</span></h2>
-                <p>We serve the best quality food made with fresh ingredients and a touch of love.</p>
+                <p>This is the place where we provide the recipes for all the dishes you need to cook .<br> We provide
+                    completely used Ingredients</br></p>
                 <a href="#popular" class="btn">View More</a>
             </div>
         </div>
@@ -65,9 +66,15 @@
     <!-- POPULAR -->
     <section id="popular" class="popular">
         <div class="container">
-            <div class="popular-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div class="popular-header"
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
                 <h2>Most Popular <span>Food</span></h2>
-                <button class="btn" id="open-add-modal-btn" style="border: none; cursor: pointer; font-size: 16px; display: none;">Add Recipe</button>
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <input type="text" id="search-input" placeholder="Search dish or ingredient..."
+                        style="padding: 10px 20px; border-radius: 25px; border: 1px solid var(--primary); outline: none; font-family: inherit; font-size: 14px; min-width: 250px;">
+                    <button class="btn" id="open-add-modal-btn"
+                        style="border: none; cursor: pointer; font-size: 16px; display: none;">Add Recipe</button>
+                </div>
             </div>
 
             <div class="cards" id="recipe-cards">
@@ -138,7 +145,9 @@
                     <label>Ingredients (comma separated)</label>
                     <input type="text" id="new-recipe-ingredients" required>
                 </div>
-                <button type="submit" class="btn" style="width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px;">Save Recipe</button>
+                <button type="submit" class="btn"
+                    style="width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px;">Save
+                    Recipe</button>
             </form>
         </div>
     </div>

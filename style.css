@@ -85,9 +85,7 @@ nav a:hover {
     transform: translateY(-50%);
 
     width: 45%;
-    /* reduced width */
-    height: 320px;
-    /* reduced height */
+    height: 400px;
 
     background: linear-gradient(135deg, #7b2ff7, #c084fc);
 
@@ -348,13 +346,15 @@ img:active {
 }
 
 /* CARD & FEATURE SCROLL ANIMATION */
-.card, .feature {
+.card,
+.feature {
     opacity: 0;
     transform: translateY(30px) !important;
     transition: all 0.6s ease;
 }
 
-.card.show, .feature.show {
+.card.show,
+.feature.show {
     opacity: 1 !important;
     transform: translateY(0) !important;
 }
@@ -391,7 +391,7 @@ img:active {
     position: relative;
     transform: translateY(-50px);
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     max-height: 90vh;
     overflow-y: auto;
 }
@@ -438,7 +438,8 @@ img:active {
     font-size: 14px;
 }
 
-.form-group input, .form-group textarea {
+.form-group input,
+.form-group textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -450,8 +451,38 @@ img:active {
     background: var(--light);
 }
 
-.form-group input:focus, .form-group textarea:focus {
+.form-group input:focus,
+.form-group textarea:focus {
     border-color: var(--primary);
     background: white;
     box-shadow: 0 0 8px rgba(123, 47, 247, 0.2);
+}
+
+/* FAVORITE BUTTON */
+.fav-btn {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 24px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ccc;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    z-index: 10;
+    user-select: none;
+}
+
+.fav-btn:hover {
+    transform: scale(1.15);
+}
+
+.fav-btn.active {
+    color: #ff4757;
 }

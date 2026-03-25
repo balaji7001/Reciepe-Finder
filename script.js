@@ -1,6 +1,8 @@
 // Global State
 let isAdmin = false;
 let editingId = null;
+let currentSearchTerm = "";
+
 
 // Initial Recipes Data
 let recipes = [
@@ -56,9 +58,21 @@ function renderRecipes() {
     if (!container) return;
 
     container.innerHTML = "";
-    recipes.forEach(recipe => {
+    
+    // Filter by search term
+    const filteredRecipes = recipes.filter(recipe => 
+        recipe.title.toLowerCase().includes(currentSearchTerm) ||
+        recipe.ingredients.some(ing => ing.toLowerCase().includes(currentSearchTerm))
+    );
+
+    if (filteredRecipes.length === 0) {
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #888; font-size: 18px; margin-top: 20px;">No recipes found.</p>`;
+    }
+
+    filteredRecipes.forEach(recipe => {
         const card = document.createElement("div");
         card.classList.add("card");
+        card.style.position = "relative";
 
         let adminActions = '';
         if (isAdmin) {
@@ -71,6 +85,7 @@ function renderRecipes() {
         }
 
         card.innerHTML = `
+            <div class="${recipe.isFavorite ? 'fav-btn active' : 'fav-btn'}" data-id="${recipe.id}">♥</div>
             <img src="${recipe.image}" alt="${recipe.title}">
             <h3>${recipe.title}</h3>
             <button class="btn small-btn view-recipe-btn" data-id="${recipe.id}" style="border: none; cursor: pointer;">View More</button>
@@ -90,6 +105,19 @@ function renderRecipes() {
             e.preventDefault();
             const id = parseInt(this.getAttribute('data-id'));
             openRecipeModal(id);
+        });
+    });
+
+    // Favorite button listeners
+    document.querySelectorAll('.fav-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const id = parseInt(this.getAttribute('data-id'));
+            const recipe = recipes.find(r => r.id === id);
+            if (recipe) {
+                recipe.isFavorite = !recipe.isFavorite;
+                renderRecipes();
+            }
         });
     });
 
@@ -219,7 +247,7 @@ if (adminLoginBtn) {
     adminLoginBtn.addEventListener('click', (e) => {
         e.preventDefault();
         if (!isAdmin) {
-            const password = prompt("Enter Admin Password (hint: admin123):");
+            const password = prompt("Enter Admin Password");
             if (password === "Admin@#12321") {
                 isAdmin = true;
                 adminLoginBtn.innerText = "Admin Logout";
@@ -236,6 +264,15 @@ if (adminLoginBtn) {
             if (openAddBtn) openAddBtn.style.display = "none";
             renderRecipes();
         }
+    });
+}
+
+// Search Bar Logic
+const searchInput = document.getElementById("search-input");
+if (searchInput) {
+    searchInput.addEventListener("input", function (e) {
+        currentSearchTerm = e.target.value.toLowerCase();
+        renderRecipes();
     });
 }
 
