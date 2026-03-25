@@ -1,3 +1,7 @@
+// Global State
+let isAdmin = false;
+let editingId = null;
+
 // Initial Recipes Data
 let recipes = [
     {
@@ -49,17 +53,28 @@ const observer = new IntersectionObserver(entries => {
 // Function to render recipes
 function renderRecipes() {
     const container = document.getElementById("recipe-cards");
-    if(!container) return;
-    
+    if (!container) return;
+
     container.innerHTML = "";
     recipes.forEach(recipe => {
         const card = document.createElement("div");
         card.classList.add("card");
-        
+
+        let adminActions = '';
+        if (isAdmin) {
+            adminActions = `
+                <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn small-btn edit-recipe-btn" data-id="${recipe.id}" style="border: none; cursor: pointer; padding: 6px 12px; font-size: 13px;">Edit</button>
+                    <button class="btn small-btn delete-recipe-btn" data-id="${recipe.id}" style="border: none; cursor: pointer; background: #e74c3c; padding: 6px 12px; font-size: 13px;">Delete</button>
+                </div>
+            `;
+        }
+
         card.innerHTML = `
             <img src="${recipe.image}" alt="${recipe.title}">
             <h3>${recipe.title}</h3>
             <button class="btn small-btn view-recipe-btn" data-id="${recipe.id}" style="border: none; cursor: pointer;">View More</button>
+            ${adminActions}
         `;
         container.appendChild(card);
     });
@@ -71,12 +86,48 @@ function renderRecipes() {
 
     // Attach event listeners to newly generated buttons
     document.querySelectorAll('.view-recipe-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
             const id = parseInt(this.getAttribute('data-id'));
             openRecipeModal(id);
         });
     });
+
+    // Admin Actions Listeners
+    if (isAdmin) {
+        document.querySelectorAll('.edit-recipe-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const id = parseInt(this.getAttribute('data-id'));
+                openEditModal(id);
+            });
+        });
+
+        document.querySelectorAll('.delete-recipe-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const id = parseInt(this.getAttribute('data-id'));
+                if (confirm("Are you sure you want to delete this recipe?")) {
+                    recipes = recipes.filter(r => r.id !== id);
+                    renderRecipes();
+                }
+            });
+        });
+    }
+}
+
+function openEditModal(id) {
+    const recipe = recipes.find(r => r.id === id);
+    if (!recipe) return;
+
+    editingId = id;
+    document.getElementById('modal-title').innerHTML = "Edit <span>Recipe</span>";
+    document.getElementById('new-recipe-title').value = recipe.title;
+    document.getElementById('new-recipe-image').value = recipe.image;
+    document.getElementById('new-recipe-desc').value = recipe.description;
+    document.getElementById('new-recipe-ingredients').value = recipe.ingredients.join(', ');
+
+    addModal.classList.add('show');
 }
 
 // Render on load
@@ -91,11 +142,11 @@ const openAddBtn = document.getElementById('open-add-modal-btn');
 
 function openRecipeModal(id) {
     const recipe = recipes.find(r => r.id === id);
-    if(recipe) {
+    if (recipe) {
         document.getElementById('detail-image').src = recipe.image;
         document.getElementById('detail-title').innerText = recipe.title;
         document.getElementById('detail-desc').innerText = recipe.description;
-        
+
         const ul = document.getElementById('detail-ingredients');
         ul.innerHTML = "";
         recipe.ingredients.forEach(ing => {
@@ -103,7 +154,7 @@ function openRecipeModal(id) {
             li.innerText = ing.trim();
             ul.appendChild(li);
         });
-        
+
         recipeModal.classList.add('show');
     }
 }
@@ -111,7 +162,12 @@ function openRecipeModal(id) {
 // Close Modals events
 if (closeRecipeBtn) closeRecipeBtn.addEventListener('click', () => recipeModal.classList.remove('show'));
 if (closeAddBtn) closeAddBtn.addEventListener('click', () => addModal.classList.remove('show'));
-if (openAddBtn) openAddBtn.addEventListener('click', () => addModal.classList.add('show'));
+if (openAddBtn) openAddBtn.addEventListener('click', () => {
+    editingId = null;
+    document.getElementById('modal-title').innerHTML = "Add New <span>Recipe</span>";
+    document.getElementById('add-recipe-form').reset();
+    addModal.classList.add('show');
+});
 
 // Close when clicking outside of modal content
 window.addEventListener('click', (e) => {
@@ -119,29 +175,67 @@ window.addEventListener('click', (e) => {
     if (e.target === addModal) addModal.classList.remove('show');
 });
 
-// Add Recipe Form Submit
+// Add/Edit Recipe Form Submit
 const addRecipeForm = document.getElementById('add-recipe-form');
 if (addRecipeForm) {
-    addRecipeForm.addEventListener('submit', function(e) {
+    addRecipeForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         const title = document.getElementById('new-recipe-title').value;
         const imageInput = document.getElementById('new-recipe-image').value;
         const desc = document.getElementById('new-recipe-desc').value;
         const ingredientsRaw = document.getElementById('new-recipe-ingredients').value;
-        
-        const newRecipe = {
-            id: recipes.length ? Math.max(...recipes.map(r => r.id)) + 1 : 1,
-            title: title,
-            image: imageInput.trim() !== "" ? imageInput : "images/pasta.jpg",
-            description: desc,
-            ingredients: ingredientsRaw.split(',').map(item => item.trim())
-        };
-        
-        recipes.push(newRecipe);
+        const image = imageInput.trim() !== "" ? imageInput : "images/pasta.jpg";
+        const ingredients = ingredientsRaw.split(',').map(item => item.trim());
+
+        if (editingId) {
+            // Update existing recipe
+            const index = recipes.findIndex(r => r.id === editingId);
+            if (index !== -1) {
+                recipes[index] = { ...recipes[index], title, image, description: desc, ingredients };
+            }
+        } else {
+            // Add new recipe
+            const newRecipe = {
+                id: recipes.length ? Math.max(...recipes.map(r => r.id)) + 1 : 1,
+                title,
+                image,
+                description: desc,
+                ingredients
+            };
+            recipes.push(newRecipe);
+        }
+
         renderRecipes();
         addModal.classList.remove('show');
         this.reset();
+        editingId = null;
+    });
+}
+
+// Admin Login Logic
+const adminLoginBtn = document.getElementById('admin-login-btn');
+if (adminLoginBtn) {
+    adminLoginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!isAdmin) {
+            const password = prompt("Enter Admin Password (hint: admin123):");
+            if (password === "Admin@#12321") {
+                isAdmin = true;
+                adminLoginBtn.innerText = "Admin Logout";
+                adminLoginBtn.style.color = "var(--primary)";
+                if (openAddBtn) openAddBtn.style.display = "block";
+                renderRecipes();
+            } else if (password !== null) {
+                alert("Incorrect Password!");
+            }
+        } else {
+            isAdmin = false;
+            adminLoginBtn.innerText = "Admin Login";
+            adminLoginBtn.style.color = "";
+            if (openAddBtn) openAddBtn.style.display = "none";
+            renderRecipes();
+        }
     });
 }
 
@@ -160,16 +254,16 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // Finger tap animation for buttons and images
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     if (e.target.closest('.btn') || e.target.closest('img') || e.target.closest('.close-btn')) {
         let ripple = document.createElement('div');
         ripple.classList.add('finger-ripple');
-        
+
         ripple.style.left = e.pageX + 'px';
         ripple.style.top = e.pageY + 'px';
-        
+
         document.body.appendChild(ripple);
-        
+
         setTimeout(() => {
             ripple.remove();
         }, 600);

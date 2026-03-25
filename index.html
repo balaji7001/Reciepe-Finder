@@ -25,6 +25,7 @@
                     <li><a href="#hero">Home</a></li>
                     <li><a href="#popular">Popular</a></li>
                     <li><a href="#about">About Us</a></li>
+                    <li><a href="#" id="admin-login-btn">Admin Login</a></li>
                 </ul>
             </nav>
         </div>
@@ -66,7 +67,7 @@
         <div class="container">
             <div class="popular-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
                 <h2>Most Popular <span>Food</span></h2>
-                <button class="btn" id="open-add-modal-btn" style="border: none; cursor: pointer; font-size: 16px;">Add Recipe</button>
+                <button class="btn" id="open-add-modal-btn" style="border: none; cursor: pointer; font-size: 16px; display: none;">Add Recipe</button>
             </div>
 
             <div class="cards" id="recipe-cards">
@@ -119,7 +120,7 @@
     <div class="modal" id="add-recipe-modal">
         <div class="modal-content">
             <span class="close-btn" id="close-add-modal">&times;</span>
-            <h2>Add New <span>Recipe</span></h2>
+            <h2 id="modal-title">Add New <span>Recipe</span></h2>
             <form id="add-recipe-form">
                 <div class="form-group">
                     <label>Recipe Name</label>
