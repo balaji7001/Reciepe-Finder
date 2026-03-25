@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodPoint</title>
+
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">FoodPoint</div>
+
+            <nav>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#popular">Popular</a></li>
+                    <li><a href="#about">About Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section id="hero" class="hero">
+        <div class="hero-bg"></div>
+
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>We Serve Delicious <span>Food</span></h1>
+                <p>Keep it simple with easy-to-use, delicious recipes that make your food moments fun and memorable.</p>
+            </div>
+
+            <div class="hero-image">
+                <img src="images/logo.png" alt="Food">
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="about">
+        <div class="container about-content">
+            <div class="about-image">
+                <img src="images/chicken.jpg" alt="Food">
+            </div>
+
+            <div class="about-text">
+                <h2>About <span>Us</span></h2>
+                <p>We serve the best quality food made with fresh ingredients and a touch of love.</p>
+                <a href="#popular" class="btn">View More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- POPULAR -->
+    <section id="popular" class="popular">
+        <div class="container">
+            <div class="popular-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                <h2>Most Popular <span>Food</span></h2>
+                <button class="btn" id="open-add-modal-btn" style="border: none; cursor: pointer; font-size: 16px;">Add Recipe</button>
+            </div>
+
+            <div class="cards" id="recipe-cards">
+                <!-- Recipes dynamically populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY -->
+    <section class="why-choose">
+        <div class="container">
+            <h2>Why Choose Our <span>Food</span></h2>
+
+            <div class="features">
+                <div class="feature">
+                    <h3>Quality Food</h3>
+                    <p>Fresh meals made with love.</p>
+                </div>
+
+                <div class="feature">
+                    <h3>Super Taste</h3>
+                    <p>Delicious flavors in every bite.</p>
+                </div>
+
+                <div class="feature">
+                    <h3>Hygenic</h3>
+                    <p>We maintain proper hygiene while preparing food.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RECIPE DETAILS MODAL -->
+    <div class="modal" id="recipe-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-recipe-modal">&times;</span>
+            <div class="recipe-modal-body">
+                <img id="detail-image" src="" alt="Recipe">
+                <div class="recipe-details-content">
+                    <h2 id="detail-title"></h2>
+                    <p id="detail-desc" style="margin-top: 10px; line-height: 1.6;"></p>
+                    <h3 style="margin-top: 20px; color: var(--primary);">Ingredients</h3>
+                    <ul id="detail-ingredients" style="margin-left: 20px; margin-top: 10px; line-height: 1.8;"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD RECIPE MODAL -->
+    <div class="modal" id="add-recipe-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-add-modal">&times;</span>
+            <h2>Add New <span>Recipe</span></h2>
+            <form id="add-recipe-form">
+                <div class="form-group">
+                    <label>Recipe Name</label>
+                    <input type="text" id="new-recipe-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Image URL (or leave blank for default)</label>
+                    <input type="text" id="new-recipe-image" placeholder="images/pasta.jpg">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="new-recipe-desc" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Ingredients (comma separated)</label>
+                    <input type="text" id="new-recipe-ingredients" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px;">Save Recipe</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
