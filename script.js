@@ -4,8 +4,8 @@ let editingId = null;
 let currentSearchTerm = "";
 
 
-// Initial Recipes Data
-let recipes = [
+// Initial Recipes Data (used only as fallback if nothing is saved)
+const defaultRecipes = [
     {
         id: 1,
         title: "Chicken Roast",
@@ -42,6 +42,19 @@ let recipes = [
         ingredients: ["200g Penne Pasta", "1 cup Tomato Sauce", "Handful of Fresh Basil", "1/4 cup Parmesan Cheese", "2 tbsp Olive Oil", "2 cloves Garlic"]
     }
 ];
+
+// Load recipes from localStorage, or fall back to defaults
+function loadRecipes() {
+    const saved = localStorage.getItem('recipes');
+    return saved ? JSON.parse(saved) : defaultRecipes;
+}
+
+// Save current recipes to localStorage
+function saveRecipes() {
+    localStorage.setItem('recipes', JSON.stringify(recipes));
+}
+
+let recipes = loadRecipes();
 
 // Scroll animation observer
 const observer = new IntersectionObserver(entries => {
@@ -116,6 +129,7 @@ function renderRecipes() {
             const recipe = recipes.find(r => r.id === id);
             if (recipe) {
                 recipe.isFavorite = !recipe.isFavorite;
+                saveRecipes();
                 renderRecipes();
             }
         });
@@ -137,6 +151,7 @@ function renderRecipes() {
                 const id = parseInt(this.getAttribute('data-id'));
                 if (confirm("Are you sure you want to delete this recipe?")) {
                     recipes = recipes.filter(r => r.id !== id);
+                    saveRecipes();
                     renderRecipes();
                 }
             });
@@ -234,6 +249,7 @@ if (addRecipeForm) {
             recipes.push(newRecipe);
         }
 
+        saveRecipes();
         renderRecipes();
         addModal.classList.remove('show');
         this.reset();
